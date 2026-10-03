@@ -1,0 +1,44 @@
+services:
+  db:
+    build: ./database
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    networks: [backend-net]
+
+  backend:
+    build: ./backend
+    environment:
+      DB_HOST: db
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      CORS_ORIGINS: ${CORS_ORIGINS}
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    networks: [backend-net]
+
+  frontend:
+    build: ./frontend
+    environment:
+      PUBLIC_API_URL: ${PUBLIC_API_URL}
+    depends_on: [backend]
+    ports:
+      - "3000:3000"
+
+volumes:
+  pgdata:
+
+networks:
+  backend-net:

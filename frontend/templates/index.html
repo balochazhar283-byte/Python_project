@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Snake Arena</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <main>
+    <section class="game">
+      <h1>Snake Arena</h1>
+      <div class="stage">
+        <canvas id="board" width="480" height="480"></canvas>
+        <form id="submit" hidden>
+          <p id="final"></p>
+          <input id="player" placeholder="Your name" maxlength="20" required>
+          <button type="submit">Save score</button>
+          <button type="button" id="again">Play again</button>
+        </form>
+      </div>
+      <p class="hint">Arrows or WASD to steer. Press an arrow key to start.</p>
+    </section>
+    <aside>
+      <h2>Top 10</h2>
+      <ol id="board-list"></ol>
+      <p id="status" role="status"></p>
+    </aside>
+  </main>
+  <script>window.API_URL = "{{ api_url }}";</script>
+  <script src="{{ url_for('static', filename='game.js') }}"></script>
+</body>
+</html>
